@@ -1,6 +1,7 @@
 pub mod token;
 pub struct Lexer {
     input: String,
+    //Maybe should be usize
     position: i32,
     read_position: i32,
     pub ch: u8,
@@ -57,6 +58,15 @@ impl Lexer {
         return &self.input[(position as usize)..(self.position as usize)];
     }
 
+    //TODO: Don't like this name
+    fn peek_char(&self) -> u8 {
+        if self.read_position as usize >= self.input.chars().count() {
+            return 0;
+        } else {
+            return self.input.chars().nth(self.read_position as usize).unwrap() as u8;
+        }
+    }
+
     pub fn next_token(&mut self) -> token::Token {
         let mut tok = token::Token {
             Literal: '\0'.to_string(),
@@ -71,12 +81,25 @@ impl Lexer {
             return tok;
         };
 
-        // println!("{}\n", self.ch as char);
-
+        //TODO: self.read_char() everytime may not be right
+        //TODO: Also as char probably not needed
         match self.ch as char {
             '=' => {
-                tok = Lexer::new_token(token::ASSIGN.to_owned(), self.ch as char);
-                self.read_char();
+                if self.peek_char() == b'=' {
+                    let ch = self.ch;
+                    self.read_char();
+                    let mut literal = String::from(ch as char);
+                    literal.push(self.ch as char);
+
+                    println!("literalL {}", literal);
+                    tok = token::Token {
+                        Type: token::EQ.to_owned(),
+                        Literal: literal,
+                    };
+                } else {
+                    tok = Lexer::new_token(token::ASSIGN.to_owned(), self.ch as char);
+                    self.read_char();
+                }
             }
             ';' => {
                 tok = Lexer::new_token(token::SEMICOLON.to_owned(), self.ch as char);
@@ -96,6 +119,42 @@ impl Lexer {
             }
             '+' => {
                 tok = Lexer::new_token(token::PLUS.to_owned(), self.ch as char);
+                self.read_char();
+            }
+            '-' => {
+                tok = Lexer::new_token(token::MINUS.to_owned(), self.ch as char);
+                self.read_char();
+            }
+            '!' => {
+                if self.peek_char() == b'=' {
+                    let ch = self.ch;
+                    self.read_char();
+                    let mut literal = String::from(ch as char);
+                    literal.push(self.ch as char);
+
+                    tok = token::Token {
+                        Type: token::NOT_EQ.to_owned(),
+                        Literal: literal,
+                    };
+                } else {
+                    tok = Lexer::new_token(token::BANG.to_owned(), self.ch as char);
+                    self.read_char();
+                }
+            }
+            '/' => {
+                tok = Lexer::new_token(token::SLASH.to_owned(), self.ch as char);
+                self.read_char();
+            }
+            '*' => {
+                tok = Lexer::new_token(token::SLASH.to_owned(), self.ch as char);
+                self.read_char();
+            }
+            '<' => {
+                tok = Lexer::new_token(token::SLASH.to_owned(), self.ch as char);
+                self.read_char();
+            }
+            '>' => {
+                tok = Lexer::new_token(token::SLASH.to_owned(), self.ch as char);
                 self.read_char();
             }
             '{' => {
