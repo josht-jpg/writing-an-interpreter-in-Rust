@@ -1,7 +1,8 @@
-// type TokenType String
+//use std::collections::HashMap;
+
 pub struct Token {
     pub Type: String,
-    pub Literal: char,
+    pub Literal: String,
 }
 
 pub type TokenType = String;
@@ -25,3 +26,27 @@ pub const RBRACE: &str = "}";
 // Keywords
 pub const FUNCTION: &str = "FUNCTION";
 pub const LET: &str= "LET";
+
+
+/*fn key_words() -> HashMap<&'static str, &'static str> { 
+    HashMap::from([
+        ("fn", FUNCTION),
+        ("let", LET),
+    ])
+}
+
+pub fn lookup_identifier(identifier: &str) -> Result<&&str, &str>  {
+   // if key_words().contains_key(identifier) {
+        return key_words().get(identifier).ok_or(IDENT);
+   // }
+   // return IDENT;
+}*/
+
+pub fn lookup_identifier(identifier: &str) -> &str {
+    match identifier {
+        "fn" => FUNCTION,
+        "let" => LET,
+        _ => IDENT
+    }
+}
+
