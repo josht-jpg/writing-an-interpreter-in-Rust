@@ -1,4 +1,4 @@
-pub mod token;
+use crate::token;
 pub struct Lexer {
     input: String,
     //Maybe should be usize
