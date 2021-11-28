@@ -1,5 +1,6 @@
 //use std::collections::HashMap;
 
+//#[derive(Copy, Clone)]
 pub struct Token {
     pub Type: String,
     pub Literal: String,
