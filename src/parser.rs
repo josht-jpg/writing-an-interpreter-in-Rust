@@ -7,6 +7,8 @@ pub struct Parser {
 
     current_token: token::Token,
     peek_token: token::Token,
+
+    errors: Vec<String>,
 }
 
 impl Parser {
@@ -27,8 +29,24 @@ impl Parser {
             self.next_token();
             return true;
         } else {
+            // println!("error: {}", &t);
+            self.peek_error();
             return false;
         }
+    }
+
+    fn peek_error(&mut self) {
+        let mut message = "expected next token to be".to_string();
+        // message.push_str(&t);
+        message.push_str(", got");
+        message.push_str(&self.peek_token.Type);
+        message.push_str(" instead");
+
+        println!(
+            "expected next token to be: --, got {} instead",
+            self.peek_token.Type
+        );
+        self.errors.push(message);
     }
 
     fn current_token_is(&self, t: token::TokenType) -> bool {
@@ -179,6 +197,10 @@ impl Parser {
 
         return program;
     }
+
+    pub fn errors(&self) -> Vec<String> {
+        return self.errors.to_owned();
+    }
 }
 
 pub fn new(l: lexer::Lexer) -> Parser {
@@ -196,6 +218,7 @@ pub fn new(l: lexer::Lexer) -> Parser {
         l,
         current_token: empty_token_current,
         peek_token: empty_token_peek,
+        errors: Vec::new(),
     };
 
     p.next_token();

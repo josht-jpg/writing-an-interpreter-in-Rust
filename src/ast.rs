@@ -26,6 +26,7 @@ impl Expression {
 
 pub enum StatementKinds {
     LetStatement,
+    ReturnStatement,
 }
 
 //Should be just called Statement
@@ -35,6 +36,7 @@ pub struct Statement {
     pub token: token::Token,
     //TODO: might be wrong
     pub name: ast::Expression,
+    //return_value
     pub value: Expression,
     pub is_empty: bool,
 }

@@ -4,29 +4,29 @@ mod parser;
 mod repl;
 mod token;
 
+fn check_parse_errors(p: parser::Parser) {
+    let errors = p.errors();
+    if errors.len() == 0 {
+        return;
+    }
+
+    println!("Parser has {} errors", errors.len());
+    for error in errors.iter() {
+        println!("parser error: {}", error);
+    }
+    return;
+}
+
 fn main() {
-    /*let mut l = lexer::new(input);
-
-    let mut t = lexer::token::Token {
-        Type: "".to_owned(),
-        Literal: "".to_owned(),
-    };
-
-    while t.Type != token::EOF {
-        println!("{}, {}\n", t.Literal, t.Type);
-        t = l.next_token();
-    }*/
-
-    // repl::start();
-
     let input = "let x = 5;
    let y = 10;
-   let foobar = 838383;";
+   let 838383;";
 
     let l = lexer::new(input);
     let mut p = parser::new(l);
 
     let program = p.parse_program();
+    check_parse_errors(p);
 
     if program.Statements.len() != 3 {
         println!(
